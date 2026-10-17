@@ -3471,9 +3471,9 @@ function newsOpen(){
 /* ---------- comunidade (mural + ranking) ----------
    Funciona na versão publicada fora do Claude (por exemplo, GitHub Pages),
    com um banco gratuito no Supabase. Preencha os dois campos abaixo com os
-   dados do seu projeto (Project Settings → API). A chave "anon" é pública
+   dados do seu projeto (Project Settings → API Keys: a "Publishable key", sb_publishable_..., ou a antiga "anon"). Essa chave é pública
    por natureza: a proteção fica nas regras do banco (veja supabase-setup.sql). */
-const COMUNIDADE={ url:'', chave:'' };
+const COMUNIDADE={ url:'https://qsasnafaycuafnluhttu.supabase.co', chave:'sb_publishable_ynwOVDkJuY_stZosqW6NyA_bhpzYwZS' };
 const COM_ON=!!(COMUNIDADE.url&&COMUNIDADE.chave)&&!/claude(usercontent)?\.(ai|site)$/.test(location.hostname);
 const COM_NICK='roleta-apelido-v1', COM_LAST='roleta-com-ultimo-v1';
 const COM_BAD=['porra','caralho','merda','puta','puto','fdp','vtnc','vsf','cu','buceta','viado','arrombado','corno','desgraçado','otario','otário','idiota','imbecil','retardado'];
@@ -3484,7 +3484,7 @@ function comClean(t){
   return s;
 }
 async function comFetch(path,opt){
-  const r=await fetch(COMUNIDADE.url.replace(/\/$/,'')+'/rest/v1/'+path,{...opt,headers:{apikey:COMUNIDADE.chave,Authorization:'Bearer '+COMUNIDADE.chave,'Content-Type':'application/json',...((opt&&opt.headers)||{})}});
+  const r=await fetch(COMUNIDADE.url.replace(/\/$/,'')+'/rest/v1/'+path,{...opt,headers:{apikey:COMUNIDADE.chave,...(/^eyJ/.test(COMUNIDADE.chave)?{Authorization:'Bearer '+COMUNIDADE.chave}:{}),'Content-Type':'application/json',...((opt&&opt.headers)||{})}});
   if(!r.ok) throw new Error('HTTP '+r.status);
   const tx=await r.text(); return tx?JSON.parse(tx):null;
 }
